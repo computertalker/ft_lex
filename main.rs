@@ -2,36 +2,7 @@ use std::env; // standard library
 use std::process;
 use std::fs::File;
 
-struct Opt
-{
-    v: bool,
-    n: bool,
-    t: bool,
-    stdin: bool,
-}
-
-impl Opt
-{
-    fn setv(&mut self) {
-        self.v = true;
-    }
-    fn setn(&mut self) {
-        self.n = true;
-    }
-    fn sett(&mut self) {
-        self.t = true;
-    }
-    fn setstdin(&mut self) {
-        self.stdin = true;
-    }
-}
-
-impl Default for Opt
-{
-    fn default() -> Self {
-        Self { v: false, n: false, t: false, stdin: false }
-    }
-}
+mod i_struct;
 
 fn ft_error(content: &str, attachement: &str) -> ! // fn never come back
 {
@@ -39,7 +10,7 @@ fn ft_error(content: &str, attachement: &str) -> ! // fn never come back
     process::exit(1);
 }
 
-fn parse_opt(args: &mut Vec<String>, s_opt: &mut Opt) -> usize
+fn parse_opt(args: &mut Vec<String>, s_opt: &mut i_struct::Opt) -> usize
 { 
     let mut index = 0;
     for (i, arg) in args.iter().enumerate() { 
@@ -50,12 +21,27 @@ fn parse_opt(args: &mut Vec<String>, s_opt: &mut Opt) -> usize
             "-t" => s_opt.sett(),
             "-"  => {
                 s_opt.setstdin();
-                return i + 1;
+                return i;
             }
             _ => return i,
         }
     }
     index
+}
+
+fn parse_file(args: &mut Vec<String>, s_opt: &mut i_struct::Opt, i: usize) -> Vec<String> {
+    let mut index = i;
+    if !s_opt.is_none() {
+        index += 1;
+    }
+    println!("i:{}", i);
+    let mut new_args: Vec<String> = Vec::new();
+    for (loop_i, _arg) in args.iter().enumerate().skip(index) {
+        if loop_i >= i {
+            new_args.push(args[loop_i].clone());
+        }
+    }
+    new_args
 }
 
 fn main()
@@ -67,13 +53,27 @@ fn main()
     }
     
     args.remove(0);
-    let mut s_opt = Opt::default();
+    let mut s_opt = i_struct::Opt::default();
     
     let res_opt = parse_opt(&mut args, &mut s_opt);
     if res_opt == 0 {
-        println!("No opt");
+        println!("No opt, i = {}", res_opt);
+        if s_opt.is_none() {
+            println!("file waiting for review");
+        }
+        else {
+            println!("use stdin and look the option");
+        }
     }
+
+    let _files: Vec<String> = parse_file(&mut args, &mut s_opt, res_opt);
          
+    for arg in _files.iter() {
+        println!("'{}'", arg); 
+    }
+    // NOW NEED TO CHECK FILES
+    //
+    //
     let mut _file = match File::open(&args[0]) {
         Ok (file) => file,
         Err(_) => {
