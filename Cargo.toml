@@ -7,4 +7,4 @@ description = ""
 
 [[bin]]
 name = "ft_lex"
-path = "main.rs"
+path = "src/main.rs"
