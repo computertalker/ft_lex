@@ -29,7 +29,7 @@ impl Opt
     pub fn _gett(&mut self) -> bool {
         self.t
     }
-    pub fn _getstdin(&mut self) -> bool {
+    pub fn getstdin(&mut self) -> bool {
         self.stdin
     }
     pub fn is_none(&mut self) -> bool {

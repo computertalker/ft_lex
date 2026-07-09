@@ -24,7 +24,6 @@ fn parse_file(args: &mut Vec<String>, s_opt: &mut opt::Opt, i: usize) -> Vec<Str
     if !s_opt.is_none() {
         index += 1;
     }
-    println!("i:{}", i);
     let mut new_args: Vec<String> = Vec::new();
     for (loop_i, arg) in args.iter().enumerate().skip(index) {
         if loop_i >= i {
@@ -34,11 +33,10 @@ fn parse_file(args: &mut Vec<String>, s_opt: &mut opt::Opt, i: usize) -> Vec<Str
     new_args
 }
 
-pub fn handle_args(mut args: &mut Vec<String>) -> Vec<String>
+pub fn handle_args(mut args: &mut Vec<String>, s_opt: &mut opt::Opt) -> Vec<String>
 {
     args.remove(0);
-    let mut s_opt = opt::Opt::default();
-    let res_opt = parse_opt(args, &mut s_opt);
-    let temp: Vec<String> = parse_file(&mut args, &mut s_opt, res_opt);
+    let res_opt = parse_opt(args, s_opt);
+    let temp: Vec<String> = parse_file(&mut args, s_opt, res_opt);
     temp
 }

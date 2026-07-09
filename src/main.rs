@@ -4,9 +4,12 @@ use std::fs::File;
 
 mod parse;
 mod structs;
+mod lexer;
 use parse::parse_opt;
+use structs::opt::Opt;
+use lexer::lexer::lexer_loop;
 
-fn ft_error(content: &str, attachement: &str) -> ! // fn never come back
+fn _ft_error(content: &str, attachement: &str) -> ! // fn never come back
 {
     eprintln!("ft_lex: {} {}", content, attachement);
     process::exit(1);
@@ -18,13 +21,16 @@ fn main()
     if args.len() < 2 {
         process::exit(0);
     }
-    
-    let _files: Vec<String> = parse_opt::handle_args(&mut args);
 
-    for (index, file) in files.iter().enumeration() {
-        if index == 0 && structs::Opt::getstdin()
-            // Lex from stdin
-        // Lex from iterations
+    let mut s_opt: Opt = Opt::default();
+    let files: Vec<String> = parse_opt::handle_args(&mut args, &mut s_opt);
+
+    for (index, file) in files.iter().enumerate() {
+        if index == 0 && s_opt.getstdin() {
+          // Lex from stdin
+            // Lex from iterations
+        }
+        lexer_loop(file);
     }
     /*
     let mut _file = match File::open(&args[0]) {
